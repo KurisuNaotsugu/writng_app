@@ -1,0 +1,35 @@
+{
+  "TOEIC_Speaking_Writing": {
+    "Writing": [
+      {
+        "task": "Write a sentence based on a picture",
+        "time_per_question_seconds": 90,
+        "direction": "Your task is to write ONE sentences about a picture. For each picture, you will be given TWO words or phrases on the screen. Your sentence must contain both words or phrases. You will be given 8 minutes to complete this task. "
+      },
+      {
+        "task": "Respond to a written request (email response)",
+        "time_per_question_seconds": 600,
+        "direction": "Your tasl is to respond to an e-mail. You wil be given 10 minutes to read and reply to each e-mail."
+      },
+      {
+        "task": "Write an opinion essay",
+        "time_per_question_seconds": 1800,
+        "direction": "Your task is to write an opinion essay in response to a question given. In youer essay, state your opinion and provide the reasons for your opinion as well as examples. This essay is generally expected to have a minimum of 300 words. You will be given 30 minutes to think about, write, and review your essay."
+      }
+    ]
+  },
+  "TOEFL_iBT": {
+    "Writing": [
+      {
+        "task": "Integrated Writing Task",
+        "time_per_question_seconds": 1200,
+        "direction": "(Ex.)Read a passage and listen to a lecture, then write a summary of the lecture in relation to the passage in 150-225 words."
+      },
+      {
+        "task": "Independent Writing Task",
+        "time_per_question_seconds": 1800,
+        "direction": "(Ex.)Write an essay expressing your opinion on a given topic in 300-350 words."
+      }
+    ]
+  }
+}
