@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, make_response
 from weasyprint import HTML
 from . import writing_bp
 import json
