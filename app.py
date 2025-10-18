@@ -12,7 +12,7 @@ def create_app():
 
     # Blueprint に client を渡す
     writing_bp.client = client
-    app.register_blueprint(writing_bp, url_prefix='/writing')
+    app.register_blueprint(writing_bp, url_prefix='')
 
     return app
 
