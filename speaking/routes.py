@@ -1,21 +1,27 @@
-from flask import render_template, make_response, current_app, request
+from flask import render_template, request, make_response
+from weasyprint import HTML
+from . import writing_bp
 import json
 import re
 import os
-import common.utils as ut
-from . import writing_bp
 
-@writing_bp.route('/writing', methods=['GET', 'POST'])
+def count_words(text: str) -> int:
+    """Count words in a given text."""
+    words = text.strip().split()
+    return 0 if not words or words[0] == "" else len(words)
+
+@writing_bp.route('/', methods=['GET', 'POST'])
 def writing():
     feedback = None
     user_text = ""
     test_type = ""
     task_type = ""
-    time_limit = 15 * 60 # デフォルト15分
+    time_limit = 15 * 60
 
     # jsonファイルを読み込み
     json_path = os.path.join('static', 'exam_data.json')
-    exam_data = ut.load_exam_data(json_path)
+    with open(json_path, encoding='utf-8') as f:
+        exam_data = json.load(f)
 
     if request.method == 'POST':
         user_text = request.form.get('user_text', '')
@@ -55,17 +61,64 @@ def writing():
                 }}
                 """
 
-        # GeminiAPIからの応答を取得
-        client = current_app.config['GENAI_CLIENT']
-        if user_text and client:
-            feedback = ut.get_gemini_response(writing_bp, prompt, model="gemini-2.5-flash")
+        if user_text and writing_bp.client:
+            response = writing_bp.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            raw_text = response.text.strip()    
+            clean_text = re.sub(r"^```json|```$", '', raw_text, flags=re.DOTALL).strip()
+
+            try:
+                feedback = json.loads(clean_text)
+            except json.JSONDecodeError:
+                feedback = {"error": "JSON parse failed", "raw": raw_text}
+
+        json_path = os.path.join('static','exam_data.json')
+        with open(json_path, encoding='utf-8') as f:
+            exam_data = json.load(f)
 
     return render_template('writing_form.html', 
                             feedback=feedback,
                             exam_data=exam_data,
                             user_text=user_text,
                             test_type=test_type,
-                            skill_type="Writing",
                             task_type=task_type,
                             time_limit=time_limit
                             )
+
+@writing_bp.route("/report", methods=["POST"])
+def generate_report():
+    # フォームのデータを受け取る
+    user_text = request.form.get("user_text", "")
+    test_type = request.form.get("test_type", "")
+    task_type = request.form.get("task_type", "")
+    feedback = request.form.get("feedback")
+
+    # 単語数カウント
+    word_count = count_words(user_text)
+
+    # feedback が JSON 文字列なら辞書に変換
+    try:
+        feedback_dict = json.loads(feedback)
+    except Exception:
+        feedback_dict = {}
+
+    # HTMLテンプレートでPDF内容を作成
+    html = render_template(
+        "writing_report.html",
+        user_text=user_text,
+        test_type=test_type,
+        task_type=task_type,
+        feedback=feedback_dict,
+        word_count=word_count
+    )
+
+    # PDFに変換
+    pdf = HTML(string=html).write_pdf()
+
+    # PDFを返す
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = f"attachment; filename=report_{test_type}_{task_type}.pdf"
+    return response

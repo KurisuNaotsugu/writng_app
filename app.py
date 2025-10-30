@@ -1,19 +1,25 @@
 import os
 from flask import Flask
 import google.genai as genai
-from writing import writing_bp  # Blueprint
+
+# Import the Blueprint
+from main import main_bp
+from writing import writing_bp
+from speaking import speaking_bp
+from report import report_bp
 
 def create_app():
     app = Flask(__name__)
 
     # Gemini API クライアント作成
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-    print(f"Using Gemini API Key: {os.getenv('GEMINI_API_KEY')}")
+    app.config['GENAI_CLIENT'] = client
 
-    # Blueprint に client を渡す
-    writing_bp.client = client
-    app.register_blueprint(writing_bp, url_prefix='')
-
+    # Blueprint をアプリに登録
+    app.register_blueprint(main_bp)
+    app.register_blueprint(writing_bp, url_prefix='/writing')
+    app.register_blueprint(speaking_bp, url_prefix='/speaking')
+    app.register_blueprint(report_bp, url_prefix='/report')
     return app
 
 if __name__ == "__main__":

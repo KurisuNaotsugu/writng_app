@@ -16,6 +16,13 @@
         "time_per_question_seconds": 1800,
         "direction": "Your task is to write an opinion essay in response to a question given. In youer essay, state your opinion and provide the reasons for your opinion as well as examples. This essay is generally expected to have a minimum of 300 words. You will be given 30 minutes to think about, write, and review your essay."
       }
+    ],
+    "Speaking": [
+      {
+        "task": "Speak something",
+        "time_per_question_seconds": 10,
+        "direction": "Your task is to speak ONE sentences about a picture."
+      }
     ]
   },
   "TOEFL_iBT": {
@@ -29,6 +36,13 @@
         "task": "Independent Writing Task",
         "time_per_question_seconds": 1800,
         "direction": "(Ex.)Write an essay expressing your opinion on a given topic in 300-350 words."
+      }
+    ],
+    "Speaking": [
+      {
+        "task": "Speak something",
+        "time_per_question_seconds": 10,
+        "direction": "Your task is to speak ONE sentences about a picture."
       }
     ]
   }

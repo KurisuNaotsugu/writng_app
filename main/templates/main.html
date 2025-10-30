@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Practice Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="p-4 bg-light">
+<div class="container">
+    <!-- タイトル -->
+    <h1 class="mb-4 text-secondary text-center fw-bold fs-2" style="letter-spacing: 1px; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem;">
+        English Practice Portal
+    </h1>
+
+    <!-- 説明 -->
+    <h2 class="text-secondary mb-3 fw-bold">Overview:</h2>
+    <ul class="text-secondary mb-4">
+        <li>このサイトでは、TOEIC S&W または TOEFL の練習を行うことができます。</li>
+        <li>以下から練習したいテストとスキル（Writing / Speaking）を選択してください。</li>
+        <li>選択後、「Start Practice」をクリックすると対応する練習ページに移動します。</li>
+    </ul>
+
+    <form id="homeForm" class="border rounded bg-white p-4 shadow-sm">
+        <!-- テスト選択 -->
+        <h3 class="text-secondary fw-bold mb-3">Select Test:</h3>
+        <div class="d-flex gap-3 mb-4">
+            <button type="button" class="btn btn-outline-primary flex-fill py-3" id="toeicBtn">
+                <i class="bi bi-journal-text"></i> TOEIC
+            </button>
+            <button type="button" class="btn btn-outline-secondary flex-fill py-3" id="toeflBtn">
+                <i class="bi bi-book"></i> TOEFL
+            </button>
+        </div>
+        <input type="hidden" name="test_type" id="testType">
+
+        <!-- スキル選択 -->
+        <h3 class="text-secondary fw-bold mb-3">Select Skill:</h3>
+        <div class="d-flex gap-3 mb-4">
+            <button type="button" class="btn btn-outline-success flex-fill py-3" id="writingBtn">
+                <i class="bi bi-pencil-square"></i> Writing
+            </button>
+            <button type="button" class="btn btn-outline-warning flex-fill py-3" id="speakingBtn">
+                <i class="bi bi-mic"></i> Speaking
+            </button>
+        </div>
+        <input type="hidden" name="skill_type" id="skillType">
+
+        <!-- スタートボタン -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-outline-dark btn-lg px-5" id="startBtn" disabled>
+                <i class="bi bi-play-circle"></i> Start Practice
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const testTypeInput = document.getElementById("testType");
+    const skillTypeInput = document.getElementById("skillType");
+    const startBtn = document.getElementById("startBtn");
+
+    function toggleSelection(buttonGroup, selectedBtn) {
+        buttonGroup.forEach(btn => btn.classList.remove("active", "btn-primary", "btn-success", "btn-warning"));
+        selectedBtn.classList.add("active");
+        if (selectedBtn.id.includes("toeic") || selectedBtn.id.includes("toefl")) {
+            selectedBtn.classList.add("btn-primary");
+        } else if (selectedBtn.id.includes("writing")) {
+            selectedBtn.classList.add("btn-success");
+        } else {
+            selectedBtn.classList.add("btn-warning");
+        }
+    }
+
+    const testButtons = [document.getElementById("toeicBtn"), document.getElementById("toeflBtn")];
+    const skillButtons = [document.getElementById("writingBtn"), document.getElementById("speakingBtn")];
+
+    testButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            toggleSelection(testButtons, btn);
+            testTypeInput.value = btn.textContent.trim();
+            updateStartButtonState();
+        });
+    });
+
+    skillButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            toggleSelection(skillButtons, btn);
+            skillTypeInput.value = btn.textContent.trim();
+            updateStartButtonState();
+        });
+    });
+
+    function updateStartButtonState() {
+        startBtn.disabled = !(testTypeInput.value && skillTypeInput.value);
+    }
+
+    document.getElementById("homeForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!testTypeInput.value || !skillTypeInput.value) return;
+
+        const skill = skillTypeInput.value.toLowerCase();
+        if (skill === "writing") {
+            window.location.href = "/writing";
+        } else if (skill === "speaking") {
+            window.location.href = "/speaking";
+        }
+    });
+</script>
+
+</body>
+</html>
