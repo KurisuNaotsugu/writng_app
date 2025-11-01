@@ -1,6 +1,6 @@
 from flask import render_template, request, make_response
 from weasyprint import HTML
-from . import writing_bp
+from . import speaking_bp
 import json
 import re
 import os
@@ -10,7 +10,7 @@ def count_words(text: str) -> int:
     words = text.strip().split()
     return 0 if not words or words[0] == "" else len(words)
 
-@writing_bp.route('/', methods=['GET', 'POST'])
+@speaking_bp.route('/writing', methods=['GET', 'POST'])
 def writing():
     feedback = None
     user_text = ""
@@ -61,8 +61,8 @@ def writing():
                 }}
                 """
 
-        if user_text and writing_bp.client:
-            response = writing_bp.client.models.generate_content(
+        if user_text and speaking_bp.client:
+            response = speaking_bp.client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
             )
@@ -78,7 +78,7 @@ def writing():
         with open(json_path, encoding='utf-8') as f:
             exam_data = json.load(f)
 
-    return render_template('writing_form.html', 
+    return render_template('speaking_form.html', 
                             feedback=feedback,
                             exam_data=exam_data,
                             user_text=user_text,
@@ -87,7 +87,7 @@ def writing():
                             time_limit=time_limit
                             )
 
-@writing_bp.route("/report", methods=["POST"])
+@speaking_bp.route("/writing_report", methods=["POST"])
 def generate_report():
     # フォームのデータを受け取る
     user_text = request.form.get("user_text", "")
@@ -106,7 +106,7 @@ def generate_report():
 
     # HTMLテンプレートでPDF内容を作成
     html = render_template(
-        "writing_report.html",
+        "speaking_report.html",
         user_text=user_text,
         test_type=test_type,
         task_type=task_type,

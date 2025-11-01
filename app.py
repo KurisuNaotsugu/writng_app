@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, redirect, url_for
 import google.genai as genai
 
 # Import the Blueprint
@@ -16,11 +16,18 @@ def create_app():
     app.config['GENAI_CLIENT'] = client
 
     # Blueprint をアプリに登録
-    app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp, url_prefix='/main')
     app.register_blueprint(writing_bp, url_prefix='/writing')
     app.register_blueprint(speaking_bp, url_prefix='/speaking')
     app.register_blueprint(report_bp, url_prefix='/report')
+
+    # トップページを /main にリダイレクト
+    @app.route('/')
+    def index():
+        return redirect(url_for('main.main'))
+    
     return app
+
 
 if __name__ == "__main__":
     app = create_app()

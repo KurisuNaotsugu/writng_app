@@ -4,4 +4,4 @@ from . import main_bp
 
 @main_bp.route('/', methods=['GET', 'POST'])
 def main():
-    return render_template('index.html')
+    return render_template('main.html')

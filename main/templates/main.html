@@ -21,7 +21,10 @@
         <li>選択後、「Start Practice」をクリックすると対応する練習ページに移動します。</li>
     </ul>
 
-    <form id="homeForm" class="border rounded bg-white p-4 shadow-sm">
+    <form id="homeForm"  method="POST" class="border rounded bg-white p-4 shadow-sm">
+        <input type="hidden" name="test_type" id="testType" value="">
+        <input type="hidden" name="skill_type" id="skillType" value="">
+
         <!-- テスト選択 -->
         <h3 class="text-secondary fw-bold mb-3">Select Test:</h3>
         <div class="d-flex gap-3 mb-4">
@@ -32,7 +35,6 @@
                 <i class="bi bi-book"></i> TOEFL
             </button>
         </div>
-        <input type="hidden" name="test_type" id="testType">
 
         <!-- スキル選択 -->
         <h3 class="text-secondary fw-bold mb-3">Select Skill:</h3>
@@ -44,69 +46,16 @@
                 <i class="bi bi-mic"></i> Speaking
             </button>
         </div>
-        <input type="hidden" name="skill_type" id="skillType">
 
         <!-- スタートボタン -->
         <div class="text-center">
             <button type="submit" class="btn btn-outline-dark btn-lg px-5" id="startBtn" disabled>
-                <i class="bi bi-play-circle"></i> Start Practice
+            <i class="bi bi-play-circle"></i> Start Practice
             </button>
         </div>
     </form>
 </div>
-
-<script>
-    const testTypeInput = document.getElementById("testType");
-    const skillTypeInput = document.getElementById("skillType");
-    const startBtn = document.getElementById("startBtn");
-
-    function toggleSelection(buttonGroup, selectedBtn) {
-        buttonGroup.forEach(btn => btn.classList.remove("active", "btn-primary", "btn-success", "btn-warning"));
-        selectedBtn.classList.add("active");
-        if (selectedBtn.id.includes("toeic") || selectedBtn.id.includes("toefl")) {
-            selectedBtn.classList.add("btn-primary");
-        } else if (selectedBtn.id.includes("writing")) {
-            selectedBtn.classList.add("btn-success");
-        } else {
-            selectedBtn.classList.add("btn-warning");
-        }
-    }
-
-    const testButtons = [document.getElementById("toeicBtn"), document.getElementById("toeflBtn")];
-    const skillButtons = [document.getElementById("writingBtn"), document.getElementById("speakingBtn")];
-
-    testButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            toggleSelection(testButtons, btn);
-            testTypeInput.value = btn.textContent.trim();
-            updateStartButtonState();
-        });
-    });
-
-    skillButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            toggleSelection(skillButtons, btn);
-            skillTypeInput.value = btn.textContent.trim();
-            updateStartButtonState();
-        });
-    });
-
-    function updateStartButtonState() {
-        startBtn.disabled = !(testTypeInput.value && skillTypeInput.value);
-    }
-
-    document.getElementById("homeForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!testTypeInput.value || !skillTypeInput.value) return;
-
-        const skill = skillTypeInput.value.toLowerCase();
-        if (skill === "writing") {
-            window.location.href = "/writing";
-        } else if (skill === "speaking") {
-            window.location.href = "/speaking";
-        }
-    });
-</script>
+<script src="{{ url_for('main.static', filename='main.js') }}"></script>
 
 </body>
 </html>
