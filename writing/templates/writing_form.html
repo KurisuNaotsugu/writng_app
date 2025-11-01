@@ -18,35 +18,18 @@
     </h1>
     <h2 class="text-secondary mb-3 fw-bold">Introduction:</h2> 
     <ul class="text-secondary mb-4"> 
-        <li>このページではTOEIC S&W あるいはTOEFLのライティングセクションに沿った回答環境を提供します</li> 
-        <li>試験と問題を選択し、指示に従って回答を入力してください</li> 
-        <li>選択した試験内容に合わせて自動でタイマーが設定されます</li> 
+        <li>このページではTOEIC S&W あるいはTOEFLのライティングセクションに沿った回答練習環境を提供します</li> 
+        <li>練習するタスクを選択し、指示に従って回答を入力してください</li> 
+        <li>選択したタスクに合わせて自動でタイマーが設定されます</li> 
         <li>'Start'を押すとタイマーが開始され、'Pause'でタイマーが一時停止します</li>
         <li>回答を入力後、'Submit'で回答を送信してください</li>
-        <li>Geminiによるフィードバックが表示されます</li> 
-    </ul>
-    <h2 class="text-secondary mb-3 fw-bold">Note:</h2> 
-    <ul class="text-secondary mb-4"> 
-        <li>スコアはあくまで"参考"です</li> 
-        <li>AIなので適当なことを言っている可能性に注意してください</li> 
+        <li>Geminiによるフィードバックページに移動します</li> 
     </ul>
 
-    <form method="POST" id="writingForm">
-        <h2 class="mt-4 mb-2 text-secondary border-bottom pb-2 fw-bold">Settings:</h2>
-        <!-- 試験選択 -->
-        <div class="d-flex align-items-center mb-3">
-        <h3 class="mb-0 me-3 text-secondary fw-bold">Test:</h3>
-        <select name="test_type" class="form-select w-auto">
-            <option value="">select</option>
-            {% for exam, content in exam_data.items() %}
-            <option value="{{ exam }}" {% if exam == test_type %}selected{% endif %}>{{ exam }}</option>
-            {% endfor %}
-        </select>
-        </div>
-
+    <form method="POST" id="writingForm" action="{{ url_for('report.feedback') }}">
         <!-- タスク選択 -->
         <div class="d-flex align-items-center mb-3">
-        <h3 class="mb-0 me-3 text-secondary fw-bold">Task:</h3>
+        <h3 class="mb-0 me-2 text-secondary fw-bold">Task Selection:</h3>
         <select name="task_type" class="form-select w-auto">
             <option value="">select</option>
             {% if test_type %}
@@ -60,14 +43,14 @@
         </div>
 
         <!-- Direction -->
-        <h2 class="mt-4 mb-2 text-secondary border-bottom pb-2 fw-bold">Direction:</h2>
+        <h2 class="mt-4 mb-2 text-secondary pb-2 fw-bold">Task Direction:</h2>
         <div class="mb-3">
             <p id="directionBox" class="border p-2 bg-white rounded">
                 Please select test and task
             </p>
         </div>
 
-        <!-- Writing入力 -->
+        <!-- Writing -->
         <h2 class="mt-3 mb-3 text-secondary border-bottom pt-2 fw-bold">Answer Field</h2>
         <div class="d-flex align-items-center gap-2 mb-2 justify-content-end">
             <span id="timer" class="fs-4 text-secondary">15:00</span>
@@ -87,49 +70,6 @@
         </div>
         <button type="submit" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-send"></i> Submit
-        </button>
-    </form>
-
-    <!-- Feedback -->
-    <h2 class="mt-3 mb-3 text-secondary border-bottom pt-2 fw-bold">Feedback from Gemini</h2>
-    {% if feedback %}
-        {% if feedback.error %}
-            <div class="alert alert-danger mt-3">
-                {{ feedback.error }}<br>
-                <pre>{{ feedback.raw }}</pre>
-            </div>
-        {% else %}
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h4 class="card-title">Score: {{ feedback.score }}/10</h4>
-                    <h5 class="mt-3">Grammar & Spelling Errors:</h5>
-                    <ul>
-                    {% for err in feedback.grammar_and_spell_errors %}
-                        <li>{{ err }}</li>
-                    {% endfor %}
-                    </ul>
-                    <h5 class="mt-3">Corrected Text:</h5>
-                    <p class="text-success">{{ feedback.corrected_text }}</p>
-                    <h5 class="mt-3">Improved Text:</h5>
-                    <p class="text-primary">{{ feedback.improved_text }}</p>
-                    <h5 class="mt-3">Explanation:</h5>
-                    <p>{{ feedback.explanation }}</p>
-                    <h5 class="mt-3">Feedback:</h5>
-                    <p>{{ feedback.feedback }}</p>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-
-
-    <form method="POST" action="{{ url_for('report.generate_report') }}">
-        <input type="hidden" name="user_text" value="{{ user_text }}">
-        <input type="hidden" name="test_type" value="{{ test_type }}">
-        <input type="hidden" name="skill_type" value="{{ skill_type }}">
-        <input type="hidden" name="task_type" value="{{ task_type }}">
-        <input type="hidden" name="feedback" value='{{ feedback|tojson }}'>
-        <button type="submit" class="btn btn-outline-secondary btn-sm mt-2">
-            <i class="bi bi-file-earmark-pdf"></i> Download PDF
         </button>
     </form>
 </div>
