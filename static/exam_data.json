@@ -1,5 +1,5 @@
 {
-  "TOEIC_Speaking_Writing": {
+  "TOEIC": {
     "Writing": [
       {
         "task": "Write a sentence based on a picture",
@@ -25,7 +25,7 @@
       }
     ]
   },
-  "TOEFL_iBT": {
+  "TOEFL": {
     "Writing": [
       {
         "task": "Integrated Writing Task",

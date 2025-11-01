@@ -4,12 +4,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const timerDisplay = document.getElementById("timer");
     const startBtn = document.getElementById("startBtn");
     const pauseBtn = document.getElementById("pauseBtn");
-    const testSelect = document.querySelector("select[name='test_type']");
     const taskSelect = document.querySelector("select[name='task_type']");
     const directionBox = document.getElementById("directionBox");
 
-    let timer = null;
-    let timeLeft = initialTimeLimit || 15 * 60;
+    let timeLeft = 15 * 60;
 
     function updateTimerDisplay() {
         let m = String(Math.floor(timeLeft / 60)).padStart(2, "0");
@@ -51,26 +49,9 @@ document.addEventListener("DOMContentLoaded", function() {
     startBtn.addEventListener("click", startTimer);
     pauseBtn.addEventListener("click", pauseTimer);
 
-    // test 選択時
-    testSelect.addEventListener("change", () => {
-        const selectedTest = testSelect.value;
-        // 空 option 以外をクリア
-        taskSelect.querySelectorAll('option:not([value=""])').forEach(opt => opt.remove());
-        directionBox.textContent = "Please select test and task";
-
-        if (selectedTest && examData[selectedTest]) {
-            examData[selectedTest].Writing.forEach(task => {
-                const opt = document.createElement("option");
-                opt.value = task.task;
-                opt.textContent = task.task;
-                taskSelect.appendChild(opt);
-            });
-        }
-    });
-
-    // task 選択時
+    // task 選択時の処理
     taskSelect.addEventListener("change", () => {
-        const selectedTest = testSelect.value;
+        const selectedTest = TestType;
         const selectedTask = taskSelect.value;
 
         if (selectedTest && selectedTask) {

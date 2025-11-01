@@ -29,7 +29,6 @@ const skillButtons = [document.getElementById("writingBtn"), document.getElement
 testButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         toggleSelection(testButtons, btn);
-        // より確実にテキストを得るために data-value 属性を使うのがベター
         testTypeInput.value = (btn.dataset.value || btn.textContent).trim();
         updateStartButtonState();
     });
@@ -45,13 +44,4 @@ skillButtons.forEach(btn => {
 
 function updateStartButtonState() {
     startBtn.disabled = !(testTypeInput.value && skillTypeInput.value);
-}
-
-form.addEventListener("submit", (e) => {
-    // skill_type と test_type を小文字に変換
-    const skill = skillTypeInput.value.toLowerCase();
-    const test = testTypeInput.value.toLowerCase();
-
-    // フォーム action を動的に設定
-    form.action = `/${skill}/${test}`;  // 例: /writing/toeic
-});
+};

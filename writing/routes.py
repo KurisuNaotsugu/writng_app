@@ -5,67 +5,26 @@ import os
 import common.utils as ut
 from . import writing_bp
 
-@writing_bp.route('/writing', methods=['GET', 'POST'])
-def writing():
-    feedback = None
-    user_text = ""
-    test_type = ""
-    task_type = ""
-    time_limit = 15 * 60 # デフォルト15分
+@writing_bp.route('/create_form', methods=['POST'])
+def create_form():
+    # mainページからテスト形式とスキルタイプを取得
+    test_type = request.form.get("test_type", '')
+    skill_type = request.form.get("skill_type", '')
 
     # jsonファイルを読み込み
     json_path = os.path.join('static', 'exam_data.json')
     exam_data = ut.load_exam_data(json_path)
 
-    if request.method == 'POST':
-        user_text = request.form.get('user_text', '')
-        test_type = request.form.get("test_type", '')
-        task_type = request.form.get("task_type", '')
-
-        # 選択されたタスクの制限時間を設定
-        if test_type and task_type:
-            tasks = exam_data[test_type]["Writing"]
-            task = next((t for t in tasks if t["task"] == task_type), None)
-            if task:
-                time_limit = task.get("time_per_question_seconds", time_limit)
-
-        prompt = f"""
-                あなたは英語試験の採点官です。
-                以下の情報に基づき、受験者の英文を評価してください。
-
-                【テストの種類】 : {test_type}
-                【タスクの種類】 : {task_type}
-                【受験者の回答】 : {user_text}
-
-                評価基準:
-                1. スコア （テストの種類に応じて）
-                2. 文法・スペルミス
-                3. 回答例（もとの例文を踏襲してより高得点が狙える文章に）
-                4. 回答例の解説
-                5. コメント（完結に、短く）
-
-                出力形式は以下のJSON形式にして、それ以外に余分な情報は出力しないでください。:
-                {{
-                "score": 数値(10点満点),
-                "grammar_and_spell_errors": ["エラー1", "エラー2"],
-                "corrected_text": "添削後の英文",
-                "improved_text": "より良い回答例",
-                "explanation": "添削の解説",
-                "feedback": "コメント"
-                }}
-                """
-
-        # GeminiAPIからの応答を取得
-        client = current_app.config['GENAI_CLIENT']
-        if user_text and client:
-            feedback = ut.get_gemini_response(writing_bp, prompt, model="gemini-2.5-flash")
-
-    return render_template('writing_form.html', 
-                            feedback=feedback,
-                            exam_data=exam_data,
-                            user_text=user_text,
-                            test_type=test_type,
-                            skill_type="Writing",
-                            task_type=task_type,
-                            time_limit=time_limit
-                            )
+    # スキルタイプに応じて適切なフォームをレンダリング
+    if skill_type == 'Writing':
+        return render_template('writing_form.html',
+                                exam_data=exam_data,
+                                test_type=test_type,
+                                skill_type=skill_type,
+                                )
+    else:
+        return render_template('speaking_form.html',
+                                exam_data=exam_data,
+                                test_type=test_type,
+                                skill_type=skill_type,
+                                )

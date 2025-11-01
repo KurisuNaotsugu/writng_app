@@ -21,7 +21,7 @@
         <li>選択後、「Start Practice」をクリックすると対応する練習ページに移動します。</li>
     </ul>
 
-    <form id="homeForm"  method="POST" class="border rounded bg-white p-4 shadow-sm">
+    <form id="homeForm"  method="POST" action= "{{ url_for('writing.create_form') }}" class="border rounded bg-white p-4 shadow-sm">
         <input type="hidden" name="test_type" id="testType" value="">
         <input type="hidden" name="skill_type" id="skillType" value="">
 

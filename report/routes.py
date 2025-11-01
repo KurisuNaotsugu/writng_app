@@ -9,56 +9,48 @@ from . import report_bp
 
 @report_bp.route("/feedback", methods=["POST"])
 def feedback():
-    feedback = None
-    user_text = ""
-    test_type = ""
-    task_type = ""
+    # 試験データと回答の取得
+    skill_type = request.form.get('skill_type', '')
+    test_type = request.form.get("test_type", '')
+    task_type = request.form.get("task_type", '')
+    user_text = request.form.get('user_text', '')
 
-    # jsonファイルを読み込み
-    json_path = os.path.join('static', 'exam_data.json')
-    exam_data = load_exam_data(json_path)
+    prompt = f"""
+            あなたは英語試験の採点官です。
+            以下の情報に基づき、受験者の英文を評価してください。
 
-    if request.method == 'POST':
-        skill_type = request.form.get('skill_type', '')
-        test_type = request.form.get("test_type", '')
-        task_type = request.form.get("task_type", '')
-        user_text = request.form.get('user_text', '')
+            【テストの種類】 : {test_type}
+            【スキルの種類】 : {skill_type}
+            【タスクの種類】 : {task_type}
+            【受験者の回答】 : {user_text}
 
-        prompt = f"""
-                あなたは英語試験の採点官です。
-                以下の情報に基づき、受験者の英文を評価してください。
+            評価基準:
+            1. スコア （テストの種類に応じて）
+            2. 文法・スペルミス
+            3. 回答例（もとの例文を踏襲してより高得点が狙える文章に）
+            4. 回答例の解説
+            5. コメント（完結に、短く）
 
-                【テストの種類】 : {test_type}
-                【スキルの種類】 : {skill_type}
-                【タスクの種類】 : {task_type}
-                【受験者の回答】 : {user_text}
+            出力形式は以下のJSON形式にして、それ以外に余分な情報は出力しないでください。:
+            {{
+            "score": 数値(10点満点),
+            "grammar_and_spell_errors": ["エラー1", "エラー2"],
+            "corrected_text": "添削後の英文",
+            "improved_text": "より良い回答例",
+            "explanation": "添削の解説",
+            "feedback": "コメント"
+            }}
+            """
 
-                評価基準:
-                1. スコア （テストの種類に応じて）
-                2. 文法・スペルミス
-                3. 回答例（もとの例文を踏襲してより高得点が狙える文章に）
-                4. 回答例の解説
-                5. コメント（完結に、短く）
-
-                出力形式は以下のJSON形式にして、それ以外に余分な情報は出力しないでください。:
-                {{
-                "score": 数値(10点満点),
-                "grammar_and_spell_errors": ["エラー1", "エラー2"],
-                "corrected_text": "添削後の英文",
-                "improved_text": "より良い回答例",
-                "explanation": "添削の解説",
-                "feedback": "コメント"
-                }}
-                """
-
-        # GeminiAPIからの応答を取得
-        client = current_app.config['GENAI_CLIENT']
-        if user_text and client:
-            feedback = get_gemini_response(report_bp, prompt, model="gemini-2.5-flash")
+    # GeminiAPIからの応答を取得
+    client = current_app.config['GENAI_CLIENT']
+    if user_text and client:
+        feedback = get_gemini_response(report_bp, prompt, model="gemini-2.5-flash")
+    else:
+        feedback = None
 
     return render_template('feedback.html', 
                             feedback=feedback,
-                            exam_data=exam_data,
                             user_text=user_text,
                             test_type=test_type,
                             skill_type=skill_type,
