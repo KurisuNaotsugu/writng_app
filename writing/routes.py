@@ -28,3 +28,27 @@ def create_form():
                                 test_type=test_type,
                                 skill_type=skill_type,
                                 )
+    
+@writing_bp.route('/transcript', methods=['POST'])
+def create_form():
+    # mainページからテスト形式とスキルタイプを取得
+    test_type = request.form.get("test_type", '')
+    skill_type = request.form.get("skill_type", '')
+    task_type = request.form.get("task_type", '')
+    user_text = request.form.get('user_text', '')
+
+    # jsonファイルを読み込み
+    json_path = os.path.join('static', 'exam_data.json')
+    exam_data = ut.load_exam_data(json_path)
+
+    # whisperによる文字起こし
+    user_tarnscript = ut.get_whisper_transcript(user_text)
+
+    return render_template('speaking_form.html',
+                            exam_data=exam_data,
+                            test_type=test_type,
+                            skill_type=skill_type,
+                            task_type = task_type,
+                            user_text = user_text,
+                            user_tarnscript = user_tarnscript,
+                            )
