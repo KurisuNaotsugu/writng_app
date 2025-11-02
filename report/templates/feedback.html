@@ -50,7 +50,7 @@
         {% endif %}
     {% endif %}
 
-    <form method="POST" action="{{ url_for('report.generate_report') }}">
+    <form method="POST" action="{{ url_for('report.report') }}">
         <input type="hidden" name="user_text" value="{{ user_text }}">
         <input type="hidden" name="test_type" value="{{ test_type }}">
         <input type="hidden" name="skill_type" value="{{ skill_type }}">

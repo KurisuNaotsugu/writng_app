@@ -12,9 +12,9 @@ def load_exam_data(json_path:str, encoding:str='utf-8') -> dict:
     with open(json_path, encoding=encoding) as f:
         return json.load(f)
     
-def get_gemini_response(bp, prompt: str, model: str="gemini-2.5-flash") -> dict:
+def get_gemini_response(client, prompt: str, model: str="gemini-2.5-flash") -> dict:
     """Get response from Gemini API and parse JSON."""
-    response = bp.client.models.generate_content(model=model, contents=prompt)
+    response = client.models.generate_content(model=model, contents=prompt)
     raw_text = response.text.strip()    
     clean_text = re.sub(r"^```json|```$", '', raw_text, flags=re.DOTALL).strip()
 

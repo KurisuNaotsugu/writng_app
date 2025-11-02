@@ -45,7 +45,7 @@ def feedback():
     # GeminiAPIからの応答を取得
     client = current_app.config['GENAI_CLIENT']
     if user_text and client:
-        feedback = get_gemini_response(report_bp, prompt, model="gemini-2.5-flash")
+        feedback = get_gemini_response(client, prompt, model="gemini-2.5-flash")
     else:
         feedback = None
 
@@ -71,9 +71,9 @@ def report():
 
     # テンプレート選択
     if skill_type == "speaking":
-        template_html = "report_speaking.html"
+        template_html = "speaking_report.html"
     else:
-        template_html = "report_writing.html"
+        template_html = "writing_report.html"
 
     # レポート作成
     html = render_template(

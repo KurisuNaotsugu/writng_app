@@ -5,7 +5,6 @@ import google.genai as genai
 # Import the Blueprint
 from main import main_bp
 from writing import writing_bp
-from speaking import speaking_bp
 from report import report_bp
 
 def create_app():
@@ -22,7 +21,6 @@ def create_app():
     # Blueprint をアプリに登録
     app.register_blueprint(main_bp, url_prefix='/main')
     app.register_blueprint(writing_bp, url_prefix='/writing')
-    app.register_blueprint(speaking_bp, url_prefix='/speaking')
     app.register_blueprint(report_bp, url_prefix='/report')
     
     return app
