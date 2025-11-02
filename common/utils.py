@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import whisper
 
 def count_words(text: str) -> int:
     """Count words in a given text."""
@@ -24,3 +25,9 @@ def get_gemini_response(client, prompt: str, model: str="gemini-2.5-flash") -> d
         feedback = {"error": "JSON parse failed", "raw": raw_text}
 
     return feedback
+
+def get_whisper_transcript(audio_path: str, model_size: str='base') -> str:
+    """Transcribe audio using Whisper model."""
+    model = whisper.load_model(model_size)
+    result = model.transcribe(audio_path, fp16=False)
+    return result['text']

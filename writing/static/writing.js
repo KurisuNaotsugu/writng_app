@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const taskSelect = document.querySelector("select[name='task_type']");
     const directionBox = document.getElementById("directionBox");
 
+    let timer = null;
     let timeLeft = 15 * 60;
 
     function updateTimerDisplay() {
@@ -42,26 +43,23 @@ document.addEventListener("DOMContentLoaded", function() {
     wordCountDisplay.textContent = countWords(userText.value);
     updateTimerDisplay();
 
-    // イベント登録
+    // イベント
     userText.addEventListener("input", () => {
         wordCountDisplay.textContent = countWords(userText.value);
     });
     startBtn.addEventListener("click", startTimer);
     pauseBtn.addEventListener("click", pauseTimer);
 
-    // task 選択時の処理
+    // タスク切り替え
     taskSelect.addEventListener("change", () => {
         const selectedTest = TestType;
         const selectedTask = taskSelect.value;
-
         if (selectedTest && selectedTask) {
             const taskObj = examData[selectedTest].Writing.find(
                 t => t.task === selectedTask
             );
             if (taskObj) {
                 directionBox.textContent = taskObj.direction;
-
-                // タイマーをリセットして新しい時間を設定
                 clearInterval(timer);
                 timer = null;
                 timeLeft = taskObj.time_per_question_seconds;

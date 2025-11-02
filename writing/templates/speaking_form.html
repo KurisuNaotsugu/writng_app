@@ -55,18 +55,18 @@
             <span id="timer" class="fs-4 text-secondary">15:00</span>
 
             <!-- Record Button -->
-            <button type="button" class="btn btn-outline-success btn-sm" id="startBtn">
+            <button type="button" class="btn btn-outline-success btn-sm" id="recordBtn">
                 <i class="bi bi-mic-fill"></i> Record
             </button>
 
             <!-- Stop Button -->
-            <button type="button" class="btn btn-outline-danger btn-sm" id="pauseBtn">
+            <button type="button" class="btn btn-outline-danger btn-sm" id="stopBtn">
                 <i class="bi bi-stop-circle"></i> Stop
             </button>
 
             <!-- Transcription Button -->
-            <button type="button" class="btn btn-outline-primary btn-sm" id="transcripeBtn">
-                <i class="bi bi-file-earmark-text"></i> Transcript
+            <button type="button" class="btn btn-outline-primary btn-sm" id="transcribeBtn">
+                <i class="bi bi-file-earmark-text"></i> Transcribe
             </button>
         </div>
 
@@ -89,6 +89,6 @@
     const examData = {{ exam_data | tojson }};
 </script>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='speaking.js') }}"></script>
 </body>
 </html>

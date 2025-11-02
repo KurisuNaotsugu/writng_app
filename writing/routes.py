@@ -1,5 +1,6 @@
 from flask import render_template, make_response, current_app, request
 import json
+import tempfile
 import re
 import os
 import common.utils as ut
@@ -30,25 +31,36 @@ def create_form():
                                 )
     
 @writing_bp.route('/transcript', methods=['POST'])
-def create_form():
+def transcript_audio():
     # mainページからテスト形式とスキルタイプを取得
     test_type = request.form.get("test_type", '')
     skill_type = request.form.get("skill_type", '')
     task_type = request.form.get("task_type", '')
-    user_text = request.form.get('user_text', '')
+
+    if 'audio_file' not in request.files:
+        return "No audio file uploaded", 400
+
+    audio_file = request.files['audio_file']
+
+    # 一時ファイルに保存
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp:
+        audio_file.save(tmp.name)
+        temp_path = tmp.name
+
+    # Whisperで文字起こし
+    transcript_text = ut.get_whisper_transcript(temp_path, model_size='base')
+
+    # 一時ファイル削除
+    os.remove(temp_path)
 
     # jsonファイルを読み込み
     json_path = os.path.join('static', 'exam_data.json')
     exam_data = ut.load_exam_data(json_path)
-
-    # whisperによる文字起こし
-    user_tarnscript = ut.get_whisper_transcript(user_text)
 
     return render_template('speaking_form.html',
                             exam_data=exam_data,
                             test_type=test_type,
                             skill_type=skill_type,
                             task_type = task_type,
-                            user_text = user_text,
-                            user_tarnscript = user_tarnscript,
+                            user_tarnscript = transcript_text,
                             )
