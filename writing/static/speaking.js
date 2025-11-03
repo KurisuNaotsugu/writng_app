@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const selectedTask = taskSelect.value;
 
         if (selectedTest && selectedTask) {
-            const taskObj = examData[selectedTest].Writing.find(
+            const taskObj = examData[selectedTest].Speaking.find(
                 t => t.task === selectedTask
             );
             if (taskObj) {
@@ -126,15 +126,20 @@ document.addEventListener("DOMContentLoaded", function() {
             const errText = await response.text();
             throw new Error(`Server error ${response.status}: ${errText}`);
         }
+        const data = await response.json();
+        if (data.error) {
+            alert("Error: " + data.error);
+            return;
+        }
 
-        // HTMLを受け取りそのまま再描画
-        const html = await response.text();
-        document.open();
-        document.write(html);
-        document.close();
+        // textarea に反映
+        userText.value = data.transcript;
+        wordCountDisplay.textContent = countWords(userText.value);
+
     } catch (err) {
         console.error("Transcription failed:", err);
         alert("Transcription failed. Check console for details.");
     }
-}); 
+});
+
 });

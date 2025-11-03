@@ -18,7 +18,7 @@
         <li>練習するタスクを選択し、指示に従って回答を録音してください</li> 
         <li>選択したタスクに合わせて自動でタイマーが設定されます</li> 
         <li>'Record'を押すとタイマーが開始され、'Stop'で録音を停止します</li>
-        <li>'Transcription'で回答を確認してください</li>
+        <li>'Transcribe'で録音した音声の文字起こしを実行します</li>
         <li>回答を確認後、'Submit'で回答を送信してください</li>
         <li>Geminiによるフィードバックページに移動します</li> 
     </ul>
@@ -32,7 +32,7 @@
         <select name="task_type" class="form-select w-auto">
             <option value="">select</option>
             {% if test_type %}
-            {% for t in exam_data[test_type].Writing %}
+            {% for t in exam_data[test_type].Speaking %}
                 <option value="{{ t.task }}" {% if t.task == task_type %}selected{% endif %}>
                 {{ t.task }}
                 </option>
@@ -74,7 +74,7 @@
         <h2 class="mt-3 mb-3 text-secondary border-bottom pt-2 fw-bold">Transcription</h2>
 
         <div class="mb-3 position-relative">
-            <textarea name="user_text" id="userText" rows="10" class="form-control">{{ user_text }}</textarea>
+            <textarea name="user_text" id="userText" rows="10" class="form-control">{{ user_transcript }}</textarea>
             <div class="position-absolute bottom-0 end-0 pe-2 pb-1 text-muted small">
                 Words: <span id="wordCount">0</span>
             </div>
@@ -85,8 +85,8 @@
     </form>
 </div>
 <script>
-    const TestType = "{{ test_type }}";
-    const examData = {{ exam_data | tojson }};
+    window.TestType = "{{ test_type }}";
+    window.examData = {{ exam_data | tojson }};
 </script>
 
 <script src="{{ url_for('writing.static', filename='speaking.js') }}"></script>

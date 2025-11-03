@@ -29,5 +29,7 @@ def get_gemini_response(client, prompt: str, model: str="gemini-2.5-flash") -> d
 def get_whisper_transcript(audio_path: str, model_size: str='base') -> str:
     """Transcribe audio using Whisper model."""
     model = whisper.load_model(model_size)
-    result = model.transcribe(audio_path, fp16=False)
+    result = model.transcribe(audio_path,
+                            language="en",
+                            fp16=False)
     return result['text']
