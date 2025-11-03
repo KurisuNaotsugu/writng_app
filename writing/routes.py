@@ -62,5 +62,5 @@ def transcript_audio():
                             test_type=test_type,
                             skill_type=skill_type,
                             task_type = task_type,
-                            user_tarnscript = transcript_text,
+                            user_transcript = transcript_text,
                             )

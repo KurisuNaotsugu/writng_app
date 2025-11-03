@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const userText = document.getElementById("userText");
     const wordCountDisplay = document.getElementById("wordCount");
     const timerDisplay = document.getElementById("timer");
-    const startBtn = document.getElementById("startBtn");
-    const pauseBtn = document.getElementById("pauseBtn");
-    const transcribeBtn = document.getElementById("transcripeBtn");
+    const recordBtn = document.getElementById("recordBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const transcribeBtn = document.getElementById("transcribeBtn");
     const taskSelect = document.querySelector("select[name='task_type']");
     const directionBox = document.getElementById("directionBox");
 
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 録音開始
-    startBtn.addEventListener("click", async () => {
+    recordBtn.addEventListener("click", async () => {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 録音停止
-    pauseBtn.addEventListener("click", () => {
+    stopBtn.addEventListener("click", () => {
         if (!mediaRecorder) return;
         mediaRecorder.stop();
         pauseTimer();
@@ -103,29 +103,38 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Transcribe（文字起こし）
-    transcribeBtn.addEventListener("click", () => {
-        if (!audioBlob) {
-            alert("録音データがありません。先にRecord → Stopしてください。");
-            return;
+    transcribeBtn.addEventListener("click", async () => {
+    if (!audioBlob) {
+        alert("録音データがありません。先にRecord → Stopしてください。");
+        return;
+    }
+
+    // FormDataを構築
+    const formData = new FormData();
+    formData.append("audio_file", audioBlob, "recording.webm");
+    formData.append("test_type", TestType);
+    formData.append("skill_type", "Speaking");
+    formData.append("task_type", taskSelect.value);
+
+    try {
+        const response = await fetch("/writing/transcript", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Server error ${response.status}: ${errText}`);
         }
 
-        const form = document.getElementById("writingForm");
-        const formData = new FormData(form);
-        formData.append("audio_file", audioBlob, "recording.webm");
-
-        form.action = "/writing/transcript"; // Flaskのルートに送信
-        form.method = "POST";
-
-        // 通常のフォーム送信（再レンダリング）
-        const tempForm = document.createElement("form");
-        tempForm.method = "POST";
-        tempForm.action = "/writing/transcript";
-        const blobInput = document.createElement("input");
-        blobInput.type = "hidden";
-        blobInput.name = "audio_file";
-        blobInput.value = audioBlob;
-        tempForm.appendChild(blobInput);
-        document.body.appendChild(tempForm);
-        form.submit();
-    });
+        // HTMLを受け取りそのまま再描画
+        const html = await response.text();
+        document.open();
+        document.write(html);
+        document.close();
+    } catch (err) {
+        console.error("Transcription failed:", err);
+        alert("Transcription failed. Check console for details.");
+    }
+}); 
 });
