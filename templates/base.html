@@ -2,7 +2,24 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Practice Portal{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">  <!-- ✅ モバイル対応 -->
+
+    <title>{% block title %}【TOEIC S&W・TOEFL iBT】ライティング・スピーキング練習アプリ（AI添削付き）{% endblock %}</title>
+
+    <meta name="description" content="Flask製の英語学習アプリ。TOEIC S&WやTOEFL iBTのライティング・スピーキング練習が可能で、AIによる添削機能も搭載しています。">
+    <meta name="keywords" content="TOEIC S&W, TOEFL iBT, ライティング練習, スピーキング練習, AI添削, 英語学習, Flask">
+    <link rel="canonical" href="https://english-writng-app.onrender.com">
+
+    <!-- ✅ SNS共有用メタ情報（Open Graph / Twitter Card） -->
+    <meta property="og:title" content="【TOEIC S&W・TOEFL iBT】AI添削付きライティング・スピーキング練習アプリ">
+    <meta property="og:description" content="Flask製の英語学習アプリ。AIがTOEIC・TOEFLのライティングとスピーキングを添削します。">
+    <meta property="og:image" content="https://english-writng-app.onrender.com/static/ogp.png">
+    <meta property="og:url" content="https://english-writng-app.onrender.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- ✅ Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -10,6 +27,7 @@
 
     {% block head %}{% endblock %}
 </head>
+
 <body class="p-4 bg-light">
 
 <div class="container">
