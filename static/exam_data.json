@@ -1,5 +1,5 @@
 {
-  "TOEIC_Speaking_Writing": {
+  "TOEIC": {
     "Writing": [
       {
         "task": "Write a sentence based on a picture",
@@ -16,9 +16,41 @@
         "time_per_question_seconds": 1800,
         "direction": "Your task is to write an opinion essay in response to a question given. In youer essay, state your opinion and provide the reasons for your opinion as well as examples. This essay is generally expected to have a minimum of 300 words. You will be given 30 minutes to think about, write, and review your essay."
       }
+    ],
+    "Speaking": [
+      {
+        "task": "Reading aloud",
+        "time_per_question_seconds": 45,
+        "direction": "Your task is to read the text aloud on your screen."
+      },
+      {
+        "task": "Discribe a picture",
+        "time_per_question_seconds": 30,
+        "direction": "Your task is to review the picture on your screen."
+      },
+      {
+        "task": "Response questions (Q5-6)",
+        "time_per_question_seconds": 15,
+        "direction": "Your task is to respond to questions."
+      },
+      {
+        "task": "Response questions (Q7)",
+        "time_per_question_seconds": 30,
+        "direction": "Your task is to respond to questions."
+      },
+      {
+        "task": "Response questions based on the information presented (Q8-9)",
+        "time_per_question_seconds": 15,
+        "direction": "Your task is to ranswer questions based on the information on the screen."
+      },
+      {
+        "task": "Response questions based on the information presented (Q10)",
+        "time_per_question_seconds": 15,
+        "direction": "Your task is to ranswer questions based on the information on the screen."
+      }
     ]
   },
-  "TOEFL_iBT": {
+  "TOEFL": {
     "Writing": [
       {
         "task": "Integrated Writing Task",
@@ -29,6 +61,23 @@
         "task": "Independent Writing Task",
         "time_per_question_seconds": 1800,
         "direction": "(Ex.)Write an essay expressing your opinion on a given topic in 300-350 words."
+      }
+    ],
+    "Speaking": [
+      {
+        "task": "Independent Speaking Task",
+        "time_per_question_seconds": 45,
+        "direction": "You will now be asked a question about a familiar topic. You will have 15 seconds to prepare your response and 45 seconds to speak."
+      },
+      {
+        "task": "Integrated Speaking Task (Read and Listen)",
+        "time_per_question_seconds": 60,
+        "direction": "You will be now read a short passage and then listen to a talk on the same topic. You will have 30 seconds to prepare your response and 60 seconds to speak."
+      },
+      {
+        "task": "Integrated Speaking Task (Listen only)",
+        "time_per_question_seconds": 60,
+        "direction": "You will now listen to a short conversation or lecture. You will have 20 seconds to prepare your response and 60 seconds to speak."
       }
     ]
   }

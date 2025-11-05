@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Writing Field | Practice Portal{% endblock %}
+
+{% block content %}
+    <!-- ページタイトル -->
+    <h1 class="mb-4 text-secondary text-center fw-bold fs-2"
+        style="letter-spacing: 1px; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem;">
+        Writing Practice Field
+    </h1>
+
+    <h2 class="text-secondary mb-3 fw-bold">Introduction:</h2> 
+    <ul class="text-secondary mb-4"> 
+        <li>このページではTOEIC S&W あるいはTOEFLのライティングセクションに沿った回答練習環境を提供します。</li> 
+        <li>練習するタスクを選択し、指示に従って回答を入力してください。</li> 
+        <li>選択したタスクに合わせて自動でタイマーが設定されます。</li> 
+        <li>'Start'を押すとタイマーが開始され、'Pause'でタイマーが一時停止します。</li>
+        <li>回答を入力後、'Submit'で回答を送信してください。</li>
+        <li>Geminiによるフィードバックページに移動します。</li> 
+    </ul>
+
+    <form method="POST" id="writingForm" action="{{ url_for('report.feedback') }}">
+        <!-- スキル選択 -->
+        <input type="hidden" name="skill_type" value="{{ skill_type }}">
+
+        <!-- タスク選択 -->
+        <div class="d-flex align-items-center mb-3">
+            <h3 class="mb-0 me-2 text-secondary fw-bold">Task Selection:</h3>
+            <select name="task_type" class="form-select w-auto">
+                <option value="">select</option>
+                {% if test_type %}
+                {% for t in exam_data[test_type].Writing %}
+                    <option value="{{ t.task }}" {% if t.task == task_type %}selected{% endif %}>
+                        {{ t.task }}
+                    </option>
+                {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        <!-- Direction -->
+        <h2 class="mt-4 mb-2 text-secondary pb-2 fw-bold">Task Direction:</h2>
+        <div class="mb-3">
+            <p id="directionBox" class="border p-2 bg-white rounded">
+                Please select test and task
+            </p>
+        </div>
+
+        <!-- Writing -->
+        <h2 class="mt-3 mb-3 text-secondary border-bottom pt-2 fw-bold">Answer Field</h2>
+        <div class="d-flex align-items-center gap-2 mb-2 justify-content-end">
+            <span id="timer" class="fs-4 text-secondary">15:00</span>
+            <button type="button" class="btn btn-outline-success btn-sm" id="startBtn">
+                <i class="bi bi-play-circle"></i> Start
+            </button>
+            <button type="button" class="btn btn-outline-warning btn-sm" id="pauseBtn">
+                <i class="bi bi-pause-circle"></i> Pause
+            </button>
+        </div>
+
+        <div class="mb-3 position-relative">
+            <textarea name="user_text" id="userText" rows="10" class="form-control">{{ user_text }}</textarea>
+            <div class="position-absolute bottom-0 end-0 pe-2 pb-1 text-muted small">
+                Words: <span id="wordCount">0</span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-send"></i> Submit
+        </button>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const TestType = "{{ test_type }}";
+    const examData = {{ exam_data | tojson }};
+</script>
+<script src="{{ url_for('writing.static', filename='writing.js') }}"></script>
+{% endblock %}

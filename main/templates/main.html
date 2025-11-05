@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}ホーム | Practice Portal{% endblock %}
+
+{% block content %}
+    <!-- タイトル -->
+    <h1 class="mb-4 text-secondary text-center fw-bold fs-2"
+        style="letter-spacing: 1px; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem;">
+        English Practice Portal
+    </h1>
+    <!-- 説明 -->
+    <h2 class="text-secondary mb-3 fw-bold">Overview:</h2>
+    <ul class="text-secondary mb-4">
+        <li>このサイトでは、TOEIC S&W または TOEFL の練習を行うことができます。</li>
+        <li>以下から練習したいテストとスキル（Writing / Speaking）を選択してください。</li>
+        <li>選択後、「Start Practice」をクリックすると対応する練習ページに移動します。</li>
+    </ul>
+
+    <form id="homeForm" method="POST" action="{{ url_for('writing.create_form') }}" class="border rounded bg-white p-4 shadow-sm">
+        <input type="hidden" name="test_type" id="testType" value="">
+        <input type="hidden" name="skill_type" id="skillType" value="">
+
+        <!-- テスト選択 -->
+        <h3 class="text-secondary fw-bold mb-3">Select Test:</h3>
+        <div class="d-flex gap-3 mb-4">
+            <button type="button" class="btn btn-outline-primary flex-fill py-3" id="toeicBtn">
+                <i class="bi bi-journal-text"></i> TOEIC
+            </button>
+            <button type="button" class="btn btn-outline-secondary flex-fill py-3" id="toeflBtn">
+                <i class="bi bi-book"></i> TOEFL
+            </button>
+        </div>
+
+        <!-- スキル選択 -->
+        <h3 class="text-secondary fw-bold mb-3">Select Skill:</h3>
+        <div class="d-flex gap-3 mb-4">
+            <button type="button" class="btn btn-outline-success flex-fill py-3" id="writingBtn">
+                <i class="bi bi-pencil-square"></i> Writing
+            </button>
+            <button type="button" class="btn btn-outline-warning flex-fill py-3" id="speakingBtn">
+                <i class="bi bi-mic"></i> Speaking
+            </button>
+        </div>
+
+        <!-- スタートボタン -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-outline-dark btn-lg px-5" id="startBtn" disabled>
+                <i class="bi bi-play-circle"></i> Start Practice
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('main.static', filename='main.js') }}"></script>
+{% endblock %}
