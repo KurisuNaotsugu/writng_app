@@ -1,43 +1,41 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Writing field</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-</head>
-<body class="p-4 bg-light">
-<div class="container">
+{% extends "base.html" %}
+
+{% block title %}Writing Field | Practice Portal{% endblock %}
+
+{% block content %}
     <!-- ページタイトル -->
-    <h1 class="mb-4 text-secondary text-center fw-bold fs-2" style="letter-spacing: 1px; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem;">
-        Writing practice field
+    <h1 class="mb-4 text-secondary text-center fw-bold fs-2"
+        style="letter-spacing: 1px; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem;">
+        Writing Practice Field
     </h1>
+
     <h2 class="text-secondary mb-3 fw-bold">Introduction:</h2> 
     <ul class="text-secondary mb-4"> 
-        <li>このページではTOEIC S&W あるいはTOEFLのライティングセクションに沿った回答練習環境を提供します</li> 
-        <li>練習するタスクを選択し、指示に従って回答を入力してください</li> 
-        <li>選択したタスクに合わせて自動でタイマーが設定されます</li> 
-        <li>'Start'を押すとタイマーが開始され、'Pause'でタイマーが一時停止します</li>
-        <li>回答を入力後、'Submit'で回答を送信してください</li>
-        <li>Geminiによるフィードバックページに移動します</li> 
+        <li>このページではTOEIC S&W あるいはTOEFLのライティングセクションに沿った回答練習環境を提供します。</li> 
+        <li>練習するタスクを選択し、指示に従って回答を入力してください。</li> 
+        <li>選択したタスクに合わせて自動でタイマーが設定されます。</li> 
+        <li>'Start'を押すとタイマーが開始され、'Pause'でタイマーが一時停止します。</li>
+        <li>回答を入力後、'Submit'で回答を送信してください。</li>
+        <li>Geminiによるフィードバックページに移動します。</li> 
     </ul>
 
     <form method="POST" id="writingForm" action="{{ url_for('report.feedback') }}">
         <!-- スキル選択 -->
         <input type="hidden" name="skill_type" value="{{ skill_type }}">
+
         <!-- タスク選択 -->
         <div class="d-flex align-items-center mb-3">
-        <h3 class="mb-0 me-2 text-secondary fw-bold">Task Selection:</h3>
-        <select name="task_type" class="form-select w-auto">
-            <option value="">select</option>
-            {% if test_type %}
-            {% for t in exam_data[test_type].Writing %}
-                <option value="{{ t.task }}" {% if t.task == task_type %}selected{% endif %}>
-                {{ t.task }}
-                </option>
-            {% endfor %}
-            {% endif %}
-        </select>
+            <h3 class="mb-0 me-2 text-secondary fw-bold">Task Selection:</h3>
+            <select name="task_type" class="form-select w-auto">
+                <option value="">select</option>
+                {% if test_type %}
+                {% for t in exam_data[test_type].Writing %}
+                    <option value="{{ t.task }}" {% if t.task == task_type %}selected{% endif %}>
+                        {{ t.task }}
+                    </option>
+                {% endfor %}
+                {% endif %}
+            </select>
         </div>
 
         <!-- Direction -->
@@ -66,16 +64,17 @@
                 Words: <span id="wordCount">0</span>
             </div>
         </div>
+
         <button type="submit" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-send"></i> Submit
         </button>
     </form>
-</div>
+{% endblock %}
+
+{% block scripts %}
 <script>
     const TestType = "{{ test_type }}";
     const examData = {{ exam_data | tojson }};
 </script>
-
 <script src="{{ url_for('writing.static', filename='writing.js') }}"></script>
-</body>
-</html>
+{% endblock %}

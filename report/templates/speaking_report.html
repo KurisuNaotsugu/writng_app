@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Speaking Report</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        h2 { color: #333; }
-        .section { margin-bottom: 20px; }
-        pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Writing Field | Practice Portal{% endblock %}
+
+{% block content %}
     <h1>Speaking Practice Report</h1>
 
     <div class="section">
@@ -49,5 +41,4 @@
         <pre>{{ feedback.feedback }}</pre>
     </div>
     {% endif %}
-</body>
-</html>
+{% endblock %}
