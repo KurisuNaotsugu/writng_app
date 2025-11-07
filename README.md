@@ -1,138 +1,138 @@
-# Writing Practice Flask App
 
-## 概要
+# ✏️ English Learning App — Writing & Speaking Practice
 
-このアプリは、TOEIC S&W や TOEFL のライティングセクションに沿った回答練習環境を提供する Flask アプリです。  
-ユーザーはテストとタスクを選択し、回答を入力すると **AI（Gemini）** が添削・フィードバックを返します。  
-さらに、タイマー機能と単語数カウントがあり、実践的な学習をサポートします。
+このアプリは、Flask で構築された英語学習支援アプリです。
+ユーザーは ライティング と スピーキング の練習を行い、AIによる自動フィードバックを受けることができます。
 
----
+## 🌐 公開先:
+🎯 アプリ本体（Render）:
 
-## 主な機能
+👉 https://english-writng-app.onrender.com
 
-- テスト種別（TOEIC S&W、TOEFL）とタスク種別の選択  
-- 選択に応じたタスクの指示（Direction）の表示と回答時間(タイマー)の設定  
-- タイマー機能（Start / Pause）  
-- 入力中の単語数カウント  
-- 回答の送信と Gemini API によるフィードバック表示  
-- JSON形式でのスコア・文法添削・改善例・解説・コメントの取得  
+📝 開発・技術解説ブログ（はてなブログ）:
 
----
+👉 https://blog.hatena.ne.jp/Naotsugublog/naotsuguenglishblog.hatenablog.com/edit?entry=17179246901312617212
 
-## 依存関係
+## 🚀 主な機能
+### 🗣️ スピーキング練習
 
-- Python 3.10 以上  
-- Flask  
-- Bootstrap 5（CDN 使用）  
-- **Gemini API（AI フィードバック用）**  
+- 音声を録音し、OpenAI Whisper によって自動で文字起こし
+- 文字起こし結果を Gemini API に送信してAIフィードバックを生成
+- 発音・文法・内容などに関するフィードバックを表示
 
-必要に応じて以下のパッケージをインストールしてください：
+### ✍️ ライティング練習
 
-```bash
-pip install flask
+- 英作文を入力・送信し、Gemini API により内容を評価
+- 文法・語彙・構成に関する改善提案を自動生成
+
+### 📄 レポート出力
+
+- AIフィードバックを PDF形式（WeasyPrint使用） でダウンロード可能
+- Writing / Speaking それぞれのレポートを生成
+
+## 使用方法
+1. テスト形式選択
+- Home画面でテスト形式 (「TOEIC S&W」または「TOEFL」)と、練習するセクション (「Speaking」または「Writing」)を選択して、`Start Practice`ボタンを押してください
+2. セクションに応じた練習ページに遷移
+    1. Writingセクションの場合
+    - 練習するタスク (問題番号)　を選択
+    - 選択したタスクに対応したタイマーが自動でセットされます
+    - `Start`ボタンを押すとタイマーがスタートするので、回答を初めてください
+    - `Pause`ボタンで、タイマーを一時停止することもできます
+    - 回答が完了したら`Submit`ボタンを押して回答を提出してください
+    - Geminiからのフィードバックページに遷移します
+
+    2. Speakingセクションの場合
+    - 練習するタスク (問題番号)　を選択
+    - 選択したタスクに対応したタイマーが自動でセットされます
+    - `Record`ボタンを押すとタイマーと録音ががスタートします
+    - `Stop`ボタンで、録音を停止します
+    - `Transcribe`ボタンで、録音を文字起こししたものが表示されます
+    - 文字起こしがうまくいっていない箇所があれば、手動で修正もできます
+    - 回答が完了したら`Submit`ボタンを押して回答を提出してください
+    - Geminiからのフィードバックページに遷移します
+
+3. Geminiからのフィードバック
+  - Geminiからのフィードバックを受けられます
+  - 10点満点のスコアは採点基準不明なので、真に受けないように注意してください
+  - 必要に応じて`Download PDF`から、レポートをダウンロードしてください
+
+## 🧠 技術スタック
+|カテゴリ|	使用技術|
+|-|-|
+|フレームワーク|	Flask (v3.1.2)|
+|音声認識|	OpenAI Whisper|
+|AI評価|	Google Gemini API|
+|PDF生成|	WeasyPrint|
+|サーバー|	Gunicorn（Procfile設定）|
+|デプロイ|	Render|
+|パッケージ管理|	Poetry|
+
+## 📂 ディレクトリ構成
 ```
-
-## Gemini API 設定
-1. Gemini API に登録して APIキー を取得
-2. 環境変数 GEMINI_API_KEY に設定
-
-``` bash
-# macOS / Linux
-export GEMINI_API_KEY="your_api_key_here"
-
-# Windows (PowerShell)
-setx GEMINI_API_KEY "your_api_key_here"
-```
-
-3. アプリ起動時に app.py 内で Gemini API クライアントを自動的に初期化します。**API を呼ぶ部分のコードは不要です。**
-
-## ディレクトリ構成
-```
-writing_app/
-├── app/
-│   ├── __init__.py
-│   ├── writing/
-│   │   ├── __init__.py
-│   │   ├── routes.py
-│   │   ├── templates/
-│   │   │   └── writing_form.html
-│   │   └── static/
-│   │       ├── script.js
-│   │       └── exam_data.json
-├── run.py
+.
+├── app.py                     # Flaskアプリのエントリポイント
+├── common/
+│   └── utils.py               # 共通関数
+├── main/
+│   ├── routes.py              # メインページのルート
+│   ├── templates/main.html
+│   └── static/main.js
+├── writing/
+│   ├── routes.py              # ライティング機能
+│   ├── templates/writing_form.html
+│   └── static/writing.js
+├── report/
+│   ├── routes.py              # フィードバック・PDF出力
+│   ├── templates/
+│   │   ├── feedback.html
+│   │   ├── speaking_report.html
+│   │   └── writing_report.html
+├── templates/base.html        # ベーステンプレート
+├── static/exam_data.json      # 問題データ等
+├── Procfile                   # Render / Gunicorn 用設定
+├── poetry.lock
+├── pyproject.toml             # Poetry依存関係設定
 └── README.md
 ```
 
-## セットアップ
-1. リポジトリをクローン
+## ⚙️ ローカル開発環境のセットアップ
+### 1️⃣ 依存関係のインストール
 ```bash
-git clone <repo-url>
-cd writing_app
+poetry install
 ```
-
-2. 仮想環境を作成して有効化
+### 2️⃣ アプリの起動
 ```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+poetry run flask --app app run
 ```
 
-3. 依存パッケージをインストール
-```bash
-pip install flask
+### 3️⃣ アクセス
+```
+http://localhost:5000
 ```
 
-4. Gemini API キーを環境変数に設定（上記参照）
-``` bash
-static/exam_data.json にテスト・タスク情報を設定
-```
+### 🔐 環境変数設定
 
-例：
-```
-{
-  "TOEIC": {
-    "Writing": [
-      {
-        "task": "Email Response",
-        "direction": "Write an email reply following the instructions.",
-        "time_per_question_seconds": 600
-      }
-    ]
-  },
-  "TOEFL": {
-    "Writing": [
-      {
-        "task": "Integrated Essay",
-        "direction": "Summarize the reading and lecture in your own words.",
-        "time_per_question_seconds": 900
-      }
-    ]
-  }
-}
-```
+.env または Render の「Environment Variables」に以下を設定してください：
 
-6. Flask アプリを起動
-```bash
-export FLASK_APP=run.py  # Windows: set FLASK_APP=run.py
-export FLASK_ENV=development
-flask run
-```
+GOOGLE_API_KEY=<your_gemini_api_key>
 
-ブラウザで http://127.0.0.1:5000/writing/ にアクセス。
 
-## 使い方
+Whisper はローカル実行のため、追加キーは不要です。
 
-1. `Test` ドロップダウンでテストを選択
-2. `Task` ドロップダウンでタスクを選択（選択後に Direction が表示されます）
-3. 回答をテキストエリアに入力
-4. Start / Pause でタイマーを管理
-5. Submit を押すと Gemini API がフィードバックを返します
+## 💬 今後の展望
 
-## 注意事項
-- AI フィードバックは参考用であり、必ずしも正確ではありません
-- タイマーや単語数は学習サポートのための目安です
-- Gemini API の使用には通信料や利用制限が発生する場合があります
+- ローディングスピナー追加
+- プロンプトの最適化
+- ログイン認証機能、過去の回答の閲覧・保存
+- スピーキング音声の保存・再生機能
+- Geminiモデル選択機能（Pro / Flash対応）
 
-## カスタマイズ
-- 新しいテストやタスクを exam_data.json に追加可能
-- フロントエンドのデザインは writing_form.html と script.js で変更可能
-- Gemini API 以外の AI に置き換えることも可能
+## 👤 作者
+
+Naotsugu Kurisu
+
+
+## 🪄 ライセンス
+
+このプロジェクトは MIT ライセンスのもとで公開されています。
